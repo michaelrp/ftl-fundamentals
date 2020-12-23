@@ -51,7 +51,6 @@ func TestSubtract(t *testing.T) {
 func TestMultiply(t *testing.T) {
 	t.Parallel()
 
-
 	type testCase struct {
 		a, b float64
 		want float64
@@ -67,6 +66,34 @@ func TestMultiply(t *testing.T) {
 		got := calculator.Multiply(tc.a, tc.b)
 		if tc.want != got {
 			t.Errorf("Multiply(%f, %f): want %f, got %f", tc.a, tc.b, tc.want, got)
+		}
+	}
+}
+
+func TestDivide(t *testing.T) {
+	t.Parallel()
+
+	type testCase struct {
+		a, b        float64
+		want        float64
+		errExpected bool
+	}
+
+	testCases := []testCase{
+		{a: 16, b: 5, want: 3.2, errExpected: false},
+		{a: -8, b: 2, want: -4, errExpected: false},
+		{a: 0, b: 345, want: 0, errExpected: false},
+		{a: 1, b: 0, want: 0, errExpected: true},
+	}
+
+	for _, tc := range testCases {
+		got, err := calculator.Divide(tc.a, tc.b)
+		if tc.errExpected && err == nil {
+			t.Errorf("Divide(%f, %f): unexpected error status: nil", tc.a, tc.b)
+		} else if tc.errExpected == false && err != nil {
+			t.Errorf("Divide(%f, %f): unexpected error status: not nil", tc.a, tc.b)
+		} else if tc.want != got {
+			t.Errorf("Divide(%f, %f): want %f, got %f", tc.a, tc.b, tc.want, got)
 		}
 	}
 }
